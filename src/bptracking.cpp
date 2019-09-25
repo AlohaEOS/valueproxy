@@ -49,10 +49,8 @@ void bptracking::transfer(name payer, name reciever, asset value, std::string me
         print("acc name ==>", account);
         if (!account)
         {
-            print("no account found in memo");
             account = payer;
         }
-
         deposits_index deposit(_self, _self.value);
         auto itr = deposit.find(account.value);
         if (itr != deposit.end())
