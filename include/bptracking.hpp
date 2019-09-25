@@ -16,6 +16,7 @@ public:
   void transfer(name payer, name reciever, asset value, string memo);
 
   ACTION regmodacc(name account, asset max_outgo, std::string weblink);
+  ACTION whitelistacc(name username);
 
   vector<string> split(const string &str, const string &delim)
   {
@@ -44,5 +45,12 @@ public:
     uint64_t primary_key() const { return account_name.value; }
   };
 
+  TABLE whitelisted
+  {
+    name username;
+    uint64_t primary_key() const { return username.value; }
+  };
+
   typedef eosio::multi_index<"eosdeposit"_n, eos_deposits> deposits_index;
+  typedef eosio::multi_index<"whitelisted"_n, whitelisted> whitelist_index;
 };

@@ -42,6 +42,26 @@
                     "type": "string"
                 }
             ]
+        },
+        {
+            "name": "whitelistacc",
+            "base": "",
+            "fields": [
+                {
+                    "name": "username",
+                    "type": "name"
+                }
+            ]
+        },
+        {
+            "name": "whitelisted",
+            "base": "",
+            "fields": [
+                {
+                    "name": "username",
+                    "type": "name"
+                }
+            ]
         }
     ],
     "actions": [
@@ -49,12 +69,24 @@
             "name": "regmodacc",
             "type": "regmodacc",
             "ricardian_contract": ""
+        },
+        {
+            "name": "whitelistacc",
+            "type": "whitelistacc",
+            "ricardian_contract": ""
         }
     ],
     "tables": [
         {
             "name": "eosdeposit",
             "type": "eos_deposits",
+            "index_type": "i64",
+            "key_names": [],
+            "key_types": []
+        },
+        {
+            "name": "whitelisted",
+            "type": "whitelisted",
             "index_type": "i64",
             "key_names": [],
             "key_types": []

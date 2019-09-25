@@ -3,7 +3,12 @@
 
 void bptracking::regmodacc(name account, asset max_outgo, std::string weblink)
 {
-    require_auth(_self);
+    eosio::check(has_auth(_self) || has_auth(account), "missing required authority of contract account or registering account");
+
+    whitelist_index whitelist(_self, _self.value);
+    auto whitelistitr = whitelist.find(account.value);
+    check(whitelistitr != whitelist.end(), "account name needs to be whitelisted first before registering");
+
     deposits_index deposit(_self, _self.value);
     auto itr = deposit.find(account.value);
     if (itr == deposit.end())
@@ -24,6 +29,17 @@ void bptracking::regmodacc(name account, asset max_outgo, std::string weblink)
     }
 }
 
+void bptracking::whitelistacc(name username)
+{
+    require_auth(_self);
+    whitelist_index whitelist(_self, _self.value);
+    auto itr = whitelist.find(username.value);
+    eosio::check(itr == whitelist.end(), "account name already whitelisted");
+    whitelist.emplace(_self, [&](auto &e) {
+        e.username = username;
+    });
+}
+
 void bptracking::transfer(name payer, name reciever, asset value, std::string memo)
 {
     if (reciever == _self)
@@ -31,13 +47,9 @@ void bptracking::transfer(name payer, name reciever, asset value, std::string me
         vector<string> memo_split = split(memo, ":");
         name account = eosio::name(memo_split[1].c_str());
         print("acc name ==>", account);
-        if (account)
+        if (!account)
         {
-            print("account fetched");
-        }
-        else
-        {
-            print("no account fetched");
+            print("no account found in memo");
             account = payer;
         }
 
@@ -59,6 +71,6 @@ extern "C" void apply(uint64_t receiver, uint64_t code, uint64_t action)
     if (code == receiver)
         switch (action)
         {
-            EOSIO_DISPATCH_HELPER(bptracking, (regmodacc))
+            EOSIO_DISPATCH_HELPER(bptracking, (regmodacc)(whitelistacc))
         }
 }
