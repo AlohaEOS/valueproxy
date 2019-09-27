@@ -15,9 +15,10 @@ CONTRACT bptracking : public eosio::contract
 public:
   void transfer(name payer, name reciever, asset value, string memo);
 
-  ACTION regmodacc(name account, asset max_outgo, std::string weblink);
+  ACTION registeracc(name account, asset max_outgo, std::string weblink);
   ACTION whitelistacc(name username);
-
+  ACTION reclaim(name username, asset amount);
+  
   vector<string> split(const string &str, const string &delim)
   {
     vector<string> tokens;

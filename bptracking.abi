@@ -26,7 +26,21 @@
             ]
         },
         {
-            "name": "regmodacc",
+            "name": "reclaim",
+            "base": "",
+            "fields": [
+                {
+                    "name": "username",
+                    "type": "name"
+                },
+                {
+                    "name": "amount",
+                    "type": "asset"
+                }
+            ]
+        },
+        {
+            "name": "registeracc",
             "base": "",
             "fields": [
                 {
@@ -66,8 +80,13 @@
     ],
     "actions": [
         {
-            "name": "regmodacc",
-            "type": "regmodacc",
+            "name": "reclaim",
+            "type": "reclaim",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "registeracc",
+            "type": "registeracc",
             "ricardian_contract": ""
         },
         {

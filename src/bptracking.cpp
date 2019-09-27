@@ -1,7 +1,7 @@
 
 #include "bptracking.hpp"
 
-void bptracking::regmodacc(name account, asset max_outgo, std::string weblink)
+void bptracking::registeracc(name account, asset max_outgo, std::string weblink)
 {
     eosio::check(has_auth(_self) || has_auth(account), "missing required authority of contract account or registering account");
 
@@ -40,6 +40,25 @@ void bptracking::whitelistacc(name username)
     });
 }
 
+void bptracking::reclaim(name username, asset amount)
+{
+    require_auth(_self);
+    deposits_index deposit(_self, _self.value);
+    auto itr = deposit.find(username.value);
+    eosio::check(itr != deposit.end(), "account name is not registered yet");
+    eosio::check(itr->total_eos >= amount, "Reaclaim amount is greater than available total eos for this account");
+
+    action(
+        permission_level{_self, "active"_n},
+        "eosio.token"_n, "transfer"_n,
+        std::make_tuple(_self, itr->account_name, amount, std::string("reclaim transfer")))
+        .send();
+
+    deposit.modify(itr, _self, [&](auto &e) {
+        e.total_eos -= amount;
+    });
+}
+
 void bptracking::transfer(name payer, name reciever, asset value, std::string memo)
 {
     if (reciever == _self)
@@ -53,6 +72,7 @@ void bptracking::transfer(name payer, name reciever, asset value, std::string me
         }
         deposits_index deposit(_self, _self.value);
         auto itr = deposit.find(account.value);
+        eosio::check(itr != deposit.end(), "account name is not registered yet to send EOS");
         if (itr != deposit.end())
         {
             deposit.modify(itr, _self, [&](auto &e) {
@@ -69,6 +89,6 @@ extern "C" void apply(uint64_t receiver, uint64_t code, uint64_t action)
     if (code == receiver)
         switch (action)
         {
-            EOSIO_DISPATCH_HELPER(bptracking, (regmodacc)(whitelistacc))
+            EOSIO_DISPATCH_HELPER(bptracking, (registeracc)(whitelistacc)(reclaim))
         }
 }
