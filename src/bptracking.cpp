@@ -29,10 +29,11 @@ void bptracking::registeracc(name account, asset max_outgo, std::string weblink)
 }
 
 void bptracking::removereg(name account) {
-    require_auth(_self);
+    check(has_auth(_self) || has_auth(account), "missing required authority of contract account or registering account");
     registration_index registrations(_self, _self.value);
     auto itr = registrations.find(account.value);
     check(itr != registrations.end(), "account not found");
+    check(itr->total_eos.amount == 0, "balance must be zero before removal");
     registrations.erase(itr);
 }
 
