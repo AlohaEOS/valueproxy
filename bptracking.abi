@@ -4,28 +4,6 @@
     "types": [],
     "structs": [
         {
-            "name": "eos_deposits",
-            "base": "",
-            "fields": [
-                {
-                    "name": "account_name",
-                    "type": "name"
-                },
-                {
-                    "name": "total_eos",
-                    "type": "asset"
-                },
-                {
-                    "name": "max_outgo",
-                    "type": "asset"
-                },
-                {
-                    "name": "weblink",
-                    "type": "string"
-                }
-            ]
-        },
-        {
             "name": "reclaim",
             "base": "",
             "fields": [
@@ -54,6 +32,38 @@
                 {
                     "name": "weblink",
                     "type": "string"
+                }
+            ]
+        },
+        {
+            "name": "registrations",
+            "base": "",
+            "fields": [
+                {
+                    "name": "account_name",
+                    "type": "name"
+                },
+                {
+                    "name": "total_eos",
+                    "type": "asset"
+                },
+                {
+                    "name": "max_outgo",
+                    "type": "asset"
+                },
+                {
+                    "name": "weblink",
+                    "type": "string"
+                }
+            ]
+        },
+        {
+            "name": "removereg",
+            "base": "",
+            "fields": [
+                {
+                    "name": "account",
+                    "type": "name"
                 }
             ]
         },
@@ -90,6 +100,11 @@
             "ricardian_contract": ""
         },
         {
+            "name": "removereg",
+            "type": "removereg",
+            "ricardian_contract": ""
+        },
+        {
             "name": "whitelistacc",
             "type": "whitelistacc",
             "ricardian_contract": ""
@@ -97,8 +112,8 @@
     ],
     "tables": [
         {
-            "name": "eosdeposit",
-            "type": "eos_deposits",
+            "name": "registered",
+            "type": "registrations",
             "index_type": "i64",
             "key_names": [],
             "key_types": []
