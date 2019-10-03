@@ -18,6 +18,7 @@ CONTRACT bptracking : public eosio::contract {
         ACTION removereg(name account);
         ACTION whitelistacc(name username);
         ACTION reclaim(name username, asset amount);
+        ACTION reducetotal(name username, asset amount);
 
         vector <string> split(const string &str, const string &delim) {
             vector <string> tokens;

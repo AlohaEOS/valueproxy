@@ -65,6 +65,18 @@ void bptracking::reclaim(name username, asset amount) {
     });
 }
 
+void bptracking::reducetotal(name username, asset amount) {
+    require_auth(_self);
+    registration_index registrations(_self, _self.value);
+    auto itr = registrations.find(username.value);
+    check(itr != registrations.end(), "account name is not registered");
+    check(itr->total_eos >= amount, "Reduce amount is greater than available total eos for this account");
+
+    registrations.modify(itr, _self, [&](auto &e) {
+        e.total_eos -= amount;
+    });
+}
+
 void bptracking::transfer(name payer, name reciever, asset value, std::string memo) {
     if (reciever == _self) {
         vector<string> memo_split = split(memo, ":");
@@ -89,7 +101,7 @@ extern "C" void apply(uint64_t receiver, uint64_t code, uint64_t action) {
         execute_action(name(receiver), name(code), &bptracking::transfer);
     } else if (code == receiver) {
         switch (action) {
-            EOSIO_DISPATCH_HELPER(bptracking, (registeracc)(removereg)(whitelistacc)(reclaim))
+            EOSIO_DISPATCH_HELPER(bptracking, (registeracc)(removereg)(whitelistacc)(reclaim)(reducetotal))
         }
     }
 }
