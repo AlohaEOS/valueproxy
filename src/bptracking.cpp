@@ -65,7 +65,7 @@ void bptracking::reclaim(name username, asset amount) {
     });
 }
 
-void bptracking::deduct(name username, asset amount) {
+void bptracking::deduct(name username, asset amount, std::string memo) {
     require_auth(_self);
     registration_index registrations(_self, _self.value);
     auto itr = registrations.find(username.value);
